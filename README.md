@@ -35,8 +35,10 @@ The last line will return the following assosiation list:
 
 ## API
 
-[Function]
-load-patterns stream &optional pattern-list
+**[Function]**<br>
+**load-patterns stream &optional pattern-list**
+
+Loads named grok patterns from a stream. Each pattern should be separated by a newline character, and formatted as an uppercase name followed by a space and the grok pattern.
 
 ## License
 
