@@ -4,6 +4,8 @@ cl-grok is a regular expression template library for Common Lisp inspired by the
 
 Use QuickLisp: `(ql:quickload :cl-grok)`
 
+*This is not yet true - initial version is still under development :)*
+
 ## Quick start
 
 ```
