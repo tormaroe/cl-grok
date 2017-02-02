@@ -1,4 +1,4 @@
-cl-grok is a regular expression template library for Common Lisp inspired by the logstash grok filter module.
+cl-grok is a regular expression template library for Common Lisp inspired by the [logstash grok filter module|https://www.elastic.co/guide/en/logstash/current/plugins-filters-grok.html].
 
 ## Install
 
@@ -37,7 +37,27 @@ The last line will return the following assosiation list:
 
 ## Example: Parse a log file
 
+Given a file *foo.log** containing the following lines:
+
+```
+2017-02-02T23:04:12.345Z INFO Program starting
+2017-02-02T23:04:12.345Z DEBUG ...
+2017-02-02T23:04:12.345Z INFO ...
+2017-02-02T23:04:12.345Z DEBUG ...
+2017-02-02T23:04:15.305Z FATAL Program terminating unexpectantly
+```
+
+.. we can write a small program to iterate over the lines and apply a grok filter to parse out and display the information we are interested in:
+
+```
 ...
+```
+
+The output would be like this:
+
+```
+...
+```
 
 ## API
 
