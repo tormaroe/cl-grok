@@ -38,7 +38,22 @@ The last line will return the following assosiation list:
 **[Function]**<br>
 **load-patterns stream &optional pattern-list**
 
-Loads named grok patterns from a stream. Each pattern should be separated by a newline character, and formatted as an uppercase name followed by a space and the grok pattern.
+Loads named grok patterns from a stream. Each pattern should be separated by a newline character, and formatted as an uppercase name followed by a space and the grok pattern. An association list of named patterns will be returned. If `pattern-list` is provided, the loaded patterns will be added to that list.
+
+**[Function]**<br>
+**load-default &optional pattern-list**
+
+Loads the most common grok patterns, borrowed from Logstash.
+
+**[Function]**<br>
+**load-patterns-from-file filepath &optional pattern-list**
+
+Loads named grok patterns from the file designed by `filepath`.
+
+**[Function]**<br>
+**make-filter pattern pattern-list**
+
+...
 
 ## License
 
