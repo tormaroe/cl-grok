@@ -2,7 +2,7 @@ cl-grok is a regular expression template library for Common Lisp inspired by the
 
 ## Install
 
-Use QuickLisp from the REPL: `(ql:quickload :cl-grok)`
+Use QuickLisp: `(ql:quickload :cl-grok)`
 
 ## Quick start
 
@@ -11,7 +11,7 @@ Use QuickLisp from the REPL: `(ql:quickload :cl-grok)`
 (defvar input "203.35.135.165 [2016-03-15T12:42:04+11:00] GET memz.co/cloud/")
 
 ;; Define a pattern to parse it
-(defvar p "%{IP:client} \\[%{TIMESTAMP_ISO8601:timestamp}\\] %{WORD:method} %{URIHOST:site}%{URIPATHPARAM:url})
+(defvar p "%{IP:client} \\[%{TIMESTAMP_ISO8601:timestamp}\\] %{WORD:method} %{URIHOST:site}%{URIPATHPARAM:url}")
 
 ;; Load the default set of grok patterns, defining IP, WORD, etc.
 (defvar ps (cl-grok:load-default))
@@ -35,7 +35,8 @@ The last line will return the following assosiation list:
 
 ## API
 
-TODO
+[Function]
+load-patterns stream &optional pattern-list
 
 ## License
 
