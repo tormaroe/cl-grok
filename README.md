@@ -1,4 +1,4 @@
-cl-grok is a regular expression template library for Common Lisp inspired by the [logstash grok filter module|https://www.elastic.co/guide/en/logstash/current/plugins-filters-grok.html].
+**cl-grok** is a regular expression template library for Common Lisp inspired by the [logstash grok filter module](https://www.elastic.co/guide/en/logstash/current/plugins-filters-grok.html).
 
 ## Install
 
