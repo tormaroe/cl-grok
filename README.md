@@ -20,7 +20,7 @@ Use QuickLisp: `(ql:quickload :cl-grok)`
 (defvar filter (cl-grok:make-filter input ps))
 
 ;; Parse input using the filter
-(cl-grok:match input filter)
+(funcall filter input)
 ```
 
 The last line will return the following assosiation list:
@@ -32,6 +32,10 @@ The last line will return the following assosiation list:
  ("site" . "memz.co")
  ("url" . "/cloud/"))
 ```
+
+## Example: Parse a log file
+
+...
 
 ## API
 
