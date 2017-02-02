@@ -53,7 +53,7 @@ Loads named grok patterns from the file designed by `filepath`.
 **[Function]**<br>
 **make-filter pattern pattern-list**
 
-...
+Returns a filter function for a grok pattern, based on the named patterns in `pattern-list`.
 
 ## License
 
