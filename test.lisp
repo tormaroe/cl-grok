@@ -25,9 +25,12 @@
       ; TODO: Assert suff about pattern
 
       ; TODO: Run a match using filter
+      (let ((match (funcall filter "My home is 127.0.0.1")))
 
-      ; TODO: Assert the result 
+        ; TODO: Assert the result 
+        (assert (equal "127.0.0.1" (cdr (assoc "address" match :test #'equal)))
+                (match)))
 
-  ))
+  )))
 
 (format t "** END OF TESTS~%")

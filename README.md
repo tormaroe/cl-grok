@@ -1,10 +1,18 @@
-**cl-grok** is a regular expression template library for Common Lisp inspired by the [logstash grok filter module](https://www.elastic.co/guide/en/logstash/current/plugins-filters-grok.html).
+**cl-grok** is a regular expression template library for Common Lisp inspired by the logstash grok filter module.
+
+Some helpfull resources on Grok:
+
+* [Logstash Grok documentation](https://www.elastic.co/guide/en/logstash/current/plugins-filters-grok.html)
+* [Grok Debugger](https://grokdebug.herokuapp.com/)
+* [Grok Constructor](http://grokconstructor.appspot.com/do/match)
 
 ## Install
 
 Use QuickLisp: `(ql:quickload :cl-grok)`
 
 *This is not yet true - initial version is still under development :)*
+
+Under the hood cl-grok uses [cl-ppcre](http://weitz.de/cl-ppcre/).
 
 ## Quick start
 
