@@ -19,16 +19,16 @@
     (assert (equal "(?:%{IPV6}|%{IPV4})" IP-pattern) (IP-pattern))
 
     (format t "*  MAKING A FILTER~%")
-    (let ((filter (cl-grok:make-filter "%{IP:address}" 
+    (let ((filter (cl-grok:make-filter "^My name is %{USERNAME:name}" 
                                        default-patterns)))
 
-      ; TODO: Assert suff about pattern
+      ; TODO: Assert stuff about pattern
 
       ; TODO: Run a match using filter
-      (let ((match (funcall filter "My home is 127.0.0.1")))
+      (let ((match (funcall filter "My name is tormaroe")))
 
         ; TODO: Assert the result 
-        (assert (equal "127.0.0.1" (cdr (assoc "address" match :test #'equal)))
+        (assert (equal "tormaroe" (cdr (assoc "name" match :test #'equal)))
                 (match)))
 
   )))

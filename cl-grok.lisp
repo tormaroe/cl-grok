@@ -37,4 +37,21 @@
     (do-filter pattern pattern-list)))
 
 (defun do-filter (pattern pattern-list)
-  '(("address" . "127.0.0.1"))) ; .. WIP
+  '(("name" . "tormaroe"))) ; .. WIP
+
+;; Strategy v1 (no recursion):
+;
+; * Find all grok patterns /%{(.+):?(.+)?}/ (named or otherwise) in filter pattern
+; * Keep names. For un-named patterns, use datatype. Need to keep track of which are named or not (later).
+; * Replace grok patterns by datatype pattern definition from pattern-list and make it a capture. Use the struct (see below).
+; * Run the scan, which results in an array of indexes and an array of lengths.
+; * Extract all matches
+; * Pair matches with names in the structs
+; * Transform the struct list to something suitable to return (the a-list)
+;
+; Make a struct to keep information about a pattern (%{..})
+;  syntax
+;  semantics
+;  position-in-sequence
+;  value
+; This is where we can add recursive information in v2
