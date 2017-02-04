@@ -54,4 +54,7 @@
 ;  semantics
 ;  position-in-sequence
 ;  value
+;  named-p
 ; This is where we can add recursive information in v2
+;
+; Remember that a match may be optional (%{...}?). In that case it should get the value nil if not matched. Make sure this works ok with cl-ppcre.
