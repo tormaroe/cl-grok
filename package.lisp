@@ -5,7 +5,7 @@
   (:export #:*default*))
 
 (defpackage #:cl-grok
-  (:use #:cl)
+  (:use #:cl #:anaphora)
   (:export #:load-default
            #:get-named-pattern
            #:make-filter))
