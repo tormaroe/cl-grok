@@ -47,6 +47,13 @@
               :pattern   "My IP is %{IP}"
               :expected  '(("IP" . "127.0.0.1")))
 
+  ;; Complex and recursive pattern type, IP + some other captures
+  ;  This has issues. %{IP} for some reason has lots of registered captures in the result, making us loose the second field.
+  (test-match :text      "My IP is 127.0.0.1 and my name is tormaroe"
+              :pattern   "My IP is %{IP} and my name is %{USERNAME:name}"
+              :expected  '(("IP" . "127.0.0.1")
+                           ("name" . "tormaroe")))
+
   )
 
 (format t "** END OF TESTS~%")
