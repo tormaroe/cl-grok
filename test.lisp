@@ -36,8 +36,8 @@
 
   ;; Two simple matches
   (test-match :text      "tormaroe said: Hello, world!"
-              :pattern   "^%{USERNAME:name} said: %{DATA:message}$"
-              :expected  '(("name" . "tormaroe")
+              :pattern   "^%{USERNAME} said: %{DATA:message}$"
+              :expected  '(("USERNAME" . "tormaroe")
                            ("message" . "Hello, world!")))
 
 
