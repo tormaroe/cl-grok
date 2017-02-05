@@ -14,19 +14,31 @@
 
 (setf cl-grok:*debug* t)
 
-(defun test-match (&key text pattern dpl expected)
-  (let* ((filter (cl-grok:make-filter pattern dpl))
-         (match (funcall filter text)))
-    (assert (equal expected match) (match))))
 
 (format t "*  LOADING DEFAULT~%")
 (let ((default-patterns (cl-grok:load-default)))
 
-  (test-match :text "My name is tormaroe"
-              :pattern "^My name is %{USERNAME:name}"
-              :dpl default-patterns
-              :expected '(("name" . "tormaroe")))
+  (defun test-match (&key text pattern expected)
+    (let* ((filter (cl-grok:make-filter pattern default-patterns))
+           (match (funcall filter text)))
+      (assert (equal expected match) (match))
+      (format t "~%")))
 
+  ;; Test a simple, named match
+  (test-match :text      "My name is tormaroe"
+              :pattern   "My name is %{USERNAME:name}"
+              :expected  '(("name" . "tormaroe")))
+
+  ;; Test a simple, un-named match
+  (test-match :text      "My name is tormaroe"
+              :pattern   "My name is %{USERNAME}"
+              :expected  '(("USERNAME" . "tormaroe")))
+
+  ;; Two simple matches
+  (test-match :text      "tormaroe said: Hello, world!"
+              :pattern   "^%{USERNAME:name} said: %{DATA:message}$"
+              :expected  '(("name" . "tormaroe")
+                           ("message" . "Hello, world!")))
 
 
   )

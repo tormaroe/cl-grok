@@ -73,14 +73,14 @@
                         (locate-grok-patterns p)))
          (modified-pattern (apply-patterns p infos dpl)))
     (dbg-trace "Filter input ~S using grok pattern ~S~%" input p)
-    (dbg-trace "~S~%" infos)
+    ;(dbg-trace "~S~%" infos)
     (dbg-trace "Modified filter is ~S~%" modified-pattern)
     (multiple-value-bind (_ regs)
         (cl-ppcre:scan-to-strings modified-pattern input)
       (dbg-trace "Match results: ~S~%" regs)
       (mapcar (lambda (info match)
-                (cons (<patterninfo>-semantic info) match)) 
-              infos 
+                (cons (<patterninfo>-result-label info) match)) 
+              (reverse infos) 
               (coerce regs 'list)))))
 
 (defstruct <patterninfo>
@@ -91,6 +91,11 @@
   syntax        ; Datatype
   semantic      ; Field name (optional) 
   )
+
+(defun <patterninfo>-result-label (info)
+  (aif (<patterninfo>-semantic info)
+    it
+    (<patterninfo>-syntax info)))
 
 (defun locate-grok-patterns (p &key (start 0) (acc ()))
   (multiple-value-bind (m-start m-end r-starts r-ends)
