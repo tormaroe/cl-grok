@@ -12,6 +12,8 @@
 (format t "*  LOADING CL-GROK~%")
 (ql:quickload :cl-grok)
 
+(setf cl-grok:*debug* t)
+
 (defun test-match (&key text pattern dpl expected)
   (let* ((filter (cl-grok:make-filter pattern dpl))
          (match (funcall filter text)))

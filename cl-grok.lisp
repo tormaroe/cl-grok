@@ -12,7 +12,23 @@
 ;;  info    : an instance of <patterninfo>
 ;;  infos   : a list of <patterninfo>
 
-(defvar *line-pattern-regex* "^([A-Z0-9_]+)\\s+(.+)")
+
+;;;
+;;;  DEBUGGING FACILITY
+;;;  Setf *debug* to t to write trace info to *trace-output*
+;;;
+
+(defvar *debug* nil
+  "Set to true to debug socket IO to *trace-output*")
+
+(defun dbg-trace (format-string &rest args)
+  (when *debug*
+    (apply #'format *trace-output* format-string args)))
+
+
+;;;
+;;;  PATTERNS LIBRARY LOADING
+;;;
 
 (defun load-patterns (stream &optional (dpl ()))
   (loop for line = (read-line stream nil)
@@ -28,6 +44,8 @@
   (let ((stream (make-string-input-stream cl-grok.patterns:*default*)))
     (load-patterns stream dpl)))
 
+(defvar *line-pattern-regex* "^([A-Z0-9_]+)\\s+(.+)")
+
 (defun line-pattern-to-cons (line)
   (cl-ppcre:register-groups-bind (name pattern) 
       (*line-pattern-regex* line :sharedp nil) 
@@ -40,6 +58,11 @@
 (defun define (name pattern dpl)
   (acons name pattern dpl)) ;; Do we need this function?
 
+
+;;;
+;;;  FILTER FUNCTIONALITY
+;;;
+
 (defun make-filter (pattern dpl) ; LATER: + &optional (options ())
   (lambda (input)
     (do-filter input pattern dpl)))
@@ -49,14 +72,12 @@
                           (extract-syntax-and-semantic p info)) 
                         (locate-grok-patterns p)))
          (modified-pattern (apply-patterns p infos dpl)))
-    (format t "DEBUG: Filter input ~S using grok pattern ~S~%" input p)
-    (format t "DEBUG: ~S~%" infos)
-    (format t "DEBUG: Modified filter is ~S~%" modified-pattern)
+    (dbg-trace "Filter input ~S using grok pattern ~S~%" input p)
+    (dbg-trace "~S~%" infos)
+    (dbg-trace "Modified filter is ~S~%" modified-pattern)
     (multiple-value-bind (_ regs)
         (cl-ppcre:scan-to-strings modified-pattern input)
-      (format t "DEBUG: RESULT>> ~S~%" regs)
-      ;; TODO: iterate over r-starts/r-ends, apply to infos
-      ;;       or should we scan to strings directly.., don't need indexes?
+      (dbg-trace "Match results: ~S~%" regs)
       (mapcar (lambda (info match)
                 (cons (<patterninfo>-semantic info) match)) 
               infos 

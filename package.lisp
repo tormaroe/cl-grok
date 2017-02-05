@@ -8,5 +8,6 @@
   (:use #:cl #:anaphora)
   (:export #:load-default
            #:get-named-pattern
-           #:make-filter))
+           #:make-filter
+           #:*debug*))
 
