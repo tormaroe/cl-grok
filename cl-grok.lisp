@@ -42,13 +42,24 @@
 
 (defun make-filter (pattern dpl) ; LATER: + &optional (options ())
   (lambda (input)
-    (do-filter pattern dpl)))
+    (do-filter input pattern dpl)))
 
-(defun do-filter (p dpl)
-  (let* ((infos (mapcar (lambda (info) (extract-syntax-and-semantic p info)) 
+(defun do-filter (input p dpl)
+  (let* ((infos (mapcar (lambda (info) 
+                          (extract-syntax-and-semantic p info)) 
                         (locate-grok-patterns p)))
-         (pattern2 (apply-patterns p infos dpl)))
-  '(("name" . "tormaroe")))) ; .. WIP
+         (modified-pattern (apply-patterns p infos dpl)))
+    (format t "DEBUG: Filter input ~S using grok pattern ~S~%" input p)
+    (format t "DEBUG: ~S~%" infos)
+    (format t "DEBUG: Modified filter is ~S~%" modified-pattern)
+    (multiple-value-bind (m-start m-end r-starts r-ends)
+        (cl-ppcre:scan modified-pattern input)
+      (format t "DEBUG: RESULT>> ~S ~S ~S ~S~%" m-start m-end r-starts r-ends)
+      ;; TODO: iterate over r-starts/r-ends, apply to infos
+      ;;       or should we scan to strings directly.., don't need indexes?
+
+      )
+    '(("name" . "tormaroe")))) ; .. WIP
 
 (defstruct <patterninfo>
   pattern-start ; index of '%' in original pattern
