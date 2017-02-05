@@ -6,14 +6,11 @@
 ;;;           $ sbcl --load test.lisp --quit
 ;;;
 
-
 (format t "** RUNNING TESTS~%")
 
-(format t "*  LOADING CL-GROK~%")
 (ql:quickload :cl-grok)
 
 (setf cl-grok:*debug* t)
-
 
 (format t "*  LOADING DEFAULT~%")
 (let ((default-patterns (cl-grok:load-default)))
@@ -40,6 +37,16 @@
               :expected  '(("USERNAME" . "tormaroe")
                            ("message" . "Hello, world!")))
 
+  ;; Complex pattern type, IPV4
+  (test-match :text      "My IP is 127.0.0.1"
+              :pattern   "My IP is %{IPV4:IP}"
+              :expected  '(("IP" . "127.0.0.1")))
+
+  ;; Complex and recursive pattern type, IP
+  (test-match :text      "My IP is 127.0.0.1"
+              :pattern   "My IP is %{IP}"
+              :expected  '(("IP" . "127.0.0.1")))
 
   )
+
 (format t "** END OF TESTS~%")

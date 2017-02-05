@@ -119,12 +119,23 @@
             (extract-part 1)))
     info))
 
-(defun apply-patterns (p infos dpl)
+(defun resolve-named-pattern (name dpl)
+  (let* ((p (get-named-pattern name dpl))
+         (groks (locate-grok-patterns p)))
+    (if groks
+      (let ((infos (mapcar (lambda (info) 
+                             (extract-syntax-and-semantic p info))
+                           groks)))
+        (apply-patterns p infos dpl :non-capture t))
+      p)))
+
+(defun apply-patterns (p infos dpl &key non-capture)
+  (let ((replace-fmt (if non-capture "~a~a~a" "~a(~a)~a"))))
   (aif (car infos)
     (apply-patterns 
       (format nil "~a(~a)~a"
         (subseq p 0 (<patterninfo>-pattern-start it))
-        (get-named-pattern (<patterninfo>-syntax it) dpl)
+        (resolve-named-pattern (<patterninfo>-syntax it) dpl)
         (subseq p (<patterninfo>-pattern-end it) (length p)))
       (cdr infos)
       dpl)
