@@ -26,7 +26,7 @@
     (cons name pattern)))
 
 (defun get-named-pattern (name pattern-list)
-  (cdr (assoc name pattern-list :test #'equal)))
+  (cdr (assoc name pattern-list :test #'equal))) ; Is this needed?
 
 ;;; Example: (define "DATA" ".*?" ()) ==> (("DATA" . ".*?"))
 (defun define (name pattern pattern-list)
@@ -37,7 +37,55 @@
     (do-filter pattern pattern-list)))
 
 (defun do-filter (pattern pattern-list)
-  '(("name" . "tormaroe"))) ; .. WIP
+  (let* ((infos (mapcar (lambda (info) (extract-syntax-and-semantic pattern info)) 
+                        (locate-grok-patterns pattern)))
+         (pattern2 (apply-patterns pattern infos pattern-list)))
+  '(("name" . "tormaroe")))) ; .. WIP
+
+(defstruct <patterninfo>
+  pattern-start ; index of '%' in original pattern
+  pattern-end   ; index after '}' in original pattern
+  part-starts   ; array with start index for syntax and semantic
+  part-ends     ; array with end index for syntax and semantic
+  syntax        ; Datatype
+  semantic      ; Field name (optional) 
+  )
+
+(defun locate-grok-patterns (pattern &key (start 0) (acc ()))
+  (multiple-value-bind (m-start m-end r-starts r-ends)
+      (cl-ppcre:scan "%{([a-zA-Z0-9-_]+):?([a-zA-Z0-9-_]+)?}" pattern :start start)
+    (if (null m-start)
+      acc
+      (locate-grok-patterns pattern
+                            :start m-end
+                            :acc (cons (make-<patterninfo> :pattern-start m-start 
+                                                           :pattern-end m-end
+                                                           :part-starts r-starts
+                                                           :part-ends r-ends) 
+                                       acc)))))
+
+(defun extract-syntax-and-semantic (pattern patterninfo)
+  (flet ((extract-part (n)
+            (subseq pattern (aref (<patterninfo>-part-starts patterninfo) n)
+                            (aref (<patterninfo>-part-ends patterninfo) n))))
+    (setf (<patterninfo>-syntax patterninfo) 
+          (extract-part 0))
+    (when (not (null (aref (<patterninfo>-part-starts patterninfo) 1)))
+      (setf (<patterninfo>-semantic patterninfo) 
+            (extract-part 1)))
+    patterninfo))
+
+(defun apply-patterns (p pix plst)
+  (if (null pix)
+    p
+    (let ((info (car pix)))
+      (apply-patterns 
+        (format nil "~a(~a)~a"
+          (subseq p 0 (<patterninfo>-pattern-start info))
+          (get-named-pattern (<patterninfo>-syntax info) plst)
+          (subseq p (<patterninfo>-pattern-end info) (length p)))
+        (cdr pix)
+        plst))))
 
 ;; Strategy v1 (no recursion):
 ;
