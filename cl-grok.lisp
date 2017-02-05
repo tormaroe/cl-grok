@@ -119,6 +119,9 @@
             (extract-part 1)))
     info))
 
+; This thus basically the same thing as `do-filter` (with some mods)
+; and it's not very elegant. Got to make it work first though.
+; Don't completely understand the complexity of recursive grok patterns yet.
 (defun resolve-named-pattern (name dpl)
   (let* ((p (get-named-pattern name dpl))
          (groks (locate-grok-patterns p)))
