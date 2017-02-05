@@ -52,14 +52,15 @@
     (format t "DEBUG: Filter input ~S using grok pattern ~S~%" input p)
     (format t "DEBUG: ~S~%" infos)
     (format t "DEBUG: Modified filter is ~S~%" modified-pattern)
-    (multiple-value-bind (m-start m-end r-starts r-ends)
-        (cl-ppcre:scan modified-pattern input)
-      (format t "DEBUG: RESULT>> ~S ~S ~S ~S~%" m-start m-end r-starts r-ends)
+    (multiple-value-bind (_ regs)
+        (cl-ppcre:scan-to-strings modified-pattern input)
+      (format t "DEBUG: RESULT>> ~S~%" regs)
       ;; TODO: iterate over r-starts/r-ends, apply to infos
       ;;       or should we scan to strings directly.., don't need indexes?
-
-      )
-    '(("name" . "tormaroe")))) ; .. WIP
+      (mapcar (lambda (info match)
+                (cons (<patterninfo>-semantic info) match)) 
+              infos 
+              (coerce regs 'list)))))
 
 (defstruct <patterninfo>
   pattern-start ; index of '%' in original pattern
@@ -122,3 +123,5 @@
 ; This is where we can add recursive information in v2
 ;
 ; Remember that a match may be optional (%{...}?). In that case it should get the value nil if not matched. Make sure this works ok with cl-ppcre.
+;
+; A problem: Capture groups may nest... Not allow it? Or maybe not a problem. 
